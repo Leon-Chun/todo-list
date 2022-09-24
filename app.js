@@ -1,24 +1,21 @@
 const express = require('express')
+const mongoose = require('mongoose')
+
 const app = express()
-// const exphbs = require('express-handlebars')
-// const mongoose = require('mongoose')
 
 const port = 3000
 
-//handlebars setting
-// app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-// app.set('view engine', 'handlebars')
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 //database setting
-// mongoose.connect('mongodb://localhost/restaurant-list')
-// const db = mongoose.connection    // 取得資料庫連線狀態
-// db.on('error', () => {                  // 連線異常
-//   console.log('mongodb error')
-// })
-// db.once('open', () => {                // 連線成功
-//   console.log('mongodb connected')
-// })
+const db = mongoose.connection    // 取得資料庫連線狀態
+db.on('error', () => {                  // 連線異常
+  console.log('mongodb error')
+})
+db.once('open', () => {                // 連線成功
+  console.log('mongodb connected')
+})
 
 
 //router setting
@@ -29,4 +26,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
 })
-
