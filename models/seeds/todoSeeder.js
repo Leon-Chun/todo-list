@@ -1,9 +1,5 @@
-const express = require('express')
 const mongoose = require('mongoose')
-
-const app = express()
-
-const port = 3000
+const Todo = require('../todo')
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -14,14 +10,10 @@ db.on('error', () => {                  // 連線異常
 })
 db.once('open', () => {                // 連線成功
   console.log('mongodb connected')
-})
 
+  for(let i= 0 ; i < 10 ; i++){
+    Todo.create({name : `name-${i}`})
+  }
 
-//router setting
-app.get('/', (req, res) => {
-  res.send('This is my movie list')
-})
-
-app.listen(port, () => {
-  console.log(`Express is listening on localhost:${port}`)
+  console.log('done')
 })
