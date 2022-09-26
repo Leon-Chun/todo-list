@@ -11,7 +11,7 @@ db.on('error', () => {                  // 連線異常
 db.once('open', () => {                // 連線成功
   console.log('mongodb connected')
 
-  for(let i= 0 ; i < 10 ; i++){
+  for(let i= 0 ; i <10 ; i++ ){
     Todo.create({name : `name-${i}`})
   }
 
