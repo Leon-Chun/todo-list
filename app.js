@@ -37,6 +37,7 @@ app.get('/todos/new', (req,res) =>{
   return res.render('new')
 })
 
+//to detail page
 app.get('/todos/:id',(req,res) => {
   const id = req.params.id
   return Todo.findById(id)
@@ -45,6 +46,30 @@ app.get('/todos/:id',(req,res) => {
     .catch(error => console.log(error))
 })
 
+//to edit page
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then(todo => res.render('edit', { todo }))
+    .catch(error => console.log(error))
+})
+
+//after edit
+app.post('/todos/:id/edit',(req,res) => {
+  const id = req.params.id
+  //因為是要修改，要存user修改的內容
+  const name = req.body.name
+  return Todo.findById(id)
+    .then(todo => {
+      todo.name = name // 這段是重新賦值
+      return todo.save()  //這邊不能用lean()，不然todo會變成單純資料，無法用save()功能
+    } )
+    .then(() => res.redirect(`/todos/${id}`))
+    .catch(error => console.log(error))
+}) 
+
+//new todo
 app.post('/todos', (req,res)=>{
   //先拿出user的輸入值
   const name = req.body.name
