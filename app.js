@@ -33,9 +33,11 @@ app.get('/', (req, res) => {
     .catch(error => console.error(error))
 })
 
+//to add new page
 app.get('/todos/new', (req,res) =>{
   return res.render('new')
 })
+
 
 //to detail page
 app.get('/todos/:id',(req,res) => {
@@ -55,6 +57,22 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//add new todo
+app.post('/todos', (req, res) => {
+  //先拿出user的輸入值
+  const name = req.body.name
+  //再來新建 todo 使用寫好schema原則的Todo,
+  const todo = new Todo({
+    name
+    //會等同 name : name 寫法
+  })
+
+  //上面這段只存在聯覽器，接下來要送入 資料庫，使用save()
+  return todo.save()
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
 //after edit
 app.post('/todos/:id/edit',(req,res) => {
   const id = req.params.id
@@ -69,21 +87,16 @@ app.post('/todos/:id/edit',(req,res) => {
     .catch(error => console.log(error))
 }) 
 
-//new todo
-app.post('/todos', (req,res)=>{
-  //先拿出user的輸入值
-  const name = req.body.name
-  //再來新建 todo 使用寫好schema原則的Todo,
-  const todo = new Todo({
-    name
-    //會等同 name : name 寫法
-  })
-
-  //上面這段只存在聯覽器，接下來要送入 資料庫，使用save()
-  return todo.save()
+//after delete
+app.post('/todos/:id/delete',(req,res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .then(todo => todo.remove())
     .then(() => res.redirect('/'))
-    .catch( error => console.log(error) )
+    .catch(error => console.log(error))
 })
+
+
 
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`)
