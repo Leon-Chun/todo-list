@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
+const methodOverride = require('method-override')
 const port = 3000
 const app = express()
 
@@ -24,6 +25,8 @@ app.engine('handlebars',exphbs({defaultLayout:'main'}))
 app.set('view engine','handlebars')
 
 app.use(express.urlencoded({extended:true}))
+app.use(methodOverride('_method'))
+
 
 //router setting
 app.get('/', (req, res) => {
@@ -75,7 +78,7 @@ app.post('/todos', (req, res) => {
 })
 
 //after edit
-app.post('/todos/:id/edit',(req,res) => {
+app.put('/todos/:id',(req,res) => {
   const id = req.params.id
   //因為是要修改，要存user修改的內容
   const {name,isDone} = req.body
@@ -97,7 +100,7 @@ app.post('/todos/:id/edit',(req,res) => {
 }) 
 
 //after delete
-app.post('/todos/:id/delete',(req,res) => {
+app.delete('/todos/:id',(req,res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
