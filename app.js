@@ -77,10 +77,18 @@ app.post('/todos', (req, res) => {
 app.post('/todos/:id/edit',(req,res) => {
   const id = req.params.id
   //因為是要修改，要存user修改的內容
-  const name = req.body.name
+  const {name,isDone} = req.body
+
   return Todo.findById(id)
     .then(todo => {
       todo.name = name // 這段是重新賦值
+      todo.isDone = isDone === 'on'
+      //上面這段使用 運算式 = > < 的回傳true false
+      // if(isDone === 'on'){ 
+      //   todo.isDone = true
+      // }else{
+      //   todo.isDone = false
+      // }
       return todo.save()  //這邊不能用lean()，不然todo會變成單純資料，無法用save()功能
     } )
     .then(() => res.redirect(`/todos/${id}`))

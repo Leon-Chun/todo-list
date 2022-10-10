@@ -1,4 +1,8 @@
-<p> {{ todo.name }} </p>
+{{!-- get 丟過來的 todo --}}
+<p> 
+  <input type="checkbox" name="isDone" {{#if todo.isDone}}checked{{/if}} disabled>
+  {{ todo.name }} 
+</p>
 <a href="/todos/{{todo._id}}/edit">edit</a>
 <form action="/todos/{{ todo._id }}/delete" method="POST" style="display: inline;">
   <button type="submit">delete</button>
