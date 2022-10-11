@@ -13,3 +13,4 @@ const todoSchema = new Schema({
 })
 
 module.exports = mongoose.model('Todo',todoSchema)
+//引用models下的 todo.js 會丟出資料庫現有資料。

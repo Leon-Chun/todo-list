@@ -3,15 +3,13 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
 const methodOverride = require('method-override')
+const routes = require('./routes')  //預設會去抓 index.js(總路由器)
 const port = 3000
 const app = express()
 
 
-
-
 //database setting
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-
 const db = mongoose.connection    // 取得資料庫連線狀態
 db.on('error', () => {                  // 連線異常
   console.log('mongodb error')
@@ -20,94 +18,15 @@ db.once('open', () => {                // 連線成功
   console.log('mongodb connected')
 })
 
+
 //express-handlebars setting
 app.engine('handlebars',exphbs({defaultLayout:'main'}))
 app.set('view engine','handlebars')
 
-app.use(express.urlencoded({extended:true}))
-app.use(methodOverride('_method'))
-
-
-//router setting
-app.get('/', (req, res) => {
-  Todo.find()
-    .lean()
-    .sort({name:'asc'}) //desc 反序
-    .then(todos => res.render('index',{todos}))
-    .catch(error => console.error(error))
-})
-
-//to add new page
-app.get('/todos/new', (req,res) =>{
-  return res.render('new')
-})
-
-
-//to detail page
-app.get('/todos/:id',(req,res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then(todo => res.render('detail',{ todo }))
-    .catch(error => console.log(error))
-})
-
-//to edit page
-app.get('/todos/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .lean()
-    .then(todo => res.render('edit', { todo }))
-    .catch(error => console.log(error))
-})
-
-//add new todo
-app.post('/todos', (req, res) => {
-  //先拿出user的輸入值
-  const name = req.body.name
-  //再來新建 todo 使用寫好schema原則的Todo,
-  const todo = new Todo({
-    name
-    //會等同 name : name 寫法
-  })
-
-  //上面這段只存在聯覽器，接下來要送入 資料庫，使用save()
-  return todo.save()
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-
-//after edit
-app.put('/todos/:id',(req,res) => {
-  const id = req.params.id
-  //因為是要修改，要存user修改的內容
-  const {name,isDone} = req.body
-
-  return Todo.findById(id)
-    .then(todo => {
-      todo.name = name // 這段是重新賦值
-      todo.isDone = isDone === 'on'
-      //上面這段使用 運算式 = > < 的回傳true false
-      // if(isDone === 'on'){ 
-      //   todo.isDone = true
-      // }else{
-      //   todo.isDone = false
-      // }
-      return todo.save()  //這邊不能用lean()，不然todo會變成單純資料，無法用save()功能
-    } )
-    .then(() => res.redirect(`/todos/${id}`))
-    .catch(error => console.log(error))
-}) 
-
-//after delete
-app.delete('/todos/:id',(req,res) => {
-  const id = req.params.id
-  return Todo.findById(id)
-    .then(todo => todo.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-
+//收到的網址處理
+app.use(express.urlencoded({extended:true}))  //body  使用
+app.use(methodOverride('_method'))            //method使用
+app.use(routes)                               //路由使用，放最後
 
 
 app.listen(port, () => {
