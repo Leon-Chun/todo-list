@@ -2,7 +2,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override')
-const port = 3000
+const PORT = process.env.PORT || 3000
 
 //自己設定的引用的項目
 const routes = require('./routes')  //預設會去抓 index.js(總路由器)
@@ -21,6 +21,6 @@ app.use(methodOverride('_method'))            //method使用
 app.use(routes)                               //路由使用，放最後
 
 
-app.listen(port, () => {
-  console.log(`Express is listening on localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`Express is listening on localhost:${PORT}`)
 })
