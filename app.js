@@ -1,5 +1,6 @@
 //外部套件
 const express = require('express')
+const session = require('express-session')
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override')
 const PORT = process.env.PORT || 3000
@@ -16,6 +17,11 @@ app.engine('handlebars',exphbs({defaultLayout:'main'}))
 app.set('view engine','handlebars')
 
 //收到的網址處理
+app.use(session({
+  secret:"ThisIsMySecret",
+  resave:false,
+  saveUninitialized:true
+}))
 app.use(express.urlencoded({extended:true}))  //body  使用
 app.use(methodOverride('_method'))            //method使用
 app.use(routes)                               //路由使用，放最後
