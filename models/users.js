@@ -13,10 +13,10 @@ const userSchema = new Schema({
   password: {
     type:String,
     required: true
-  }
+  },
   createdAd: {
     type:Date,
-    default: Date.now
+    default: Date.now  //建立資料的時間點，Date.now() 會變成伺服器建立的時間
   }
 })
 
