@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router() // 啟動路由器功能
 const Users = require('../../models/users')
+const passport = require('passport')
 
 router.get('/login',(req,res) => {
   res.render('login')
@@ -10,12 +11,13 @@ router.get('/register',(req,res) => {
   res.render('register')
 })
 
-router.post('/login', (req, res) => {
-  res.render('index')
-})
+router.post('/login', passport.authenticate('local',{
+  successRedirect: '/',
+  failureRedirect: 'users/login'
+}))
 
 router.post('/register',(req,res) => {
-  //結構付值
+  //結構賦值
   const { name,email,password,confirmPassword } = req.body
 
   Users.findOne({email})

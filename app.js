@@ -9,6 +9,10 @@ const PORT = process.env.PORT || 3000
 const routes = require('./routes')  //預設會去抓 index.js(總路由器)
 require('./config/mongoose')
 
+const usePassport = require('./config/passport')
+
+
+
 //使用套件後，產生的東西
 const app = express()
 
@@ -24,6 +28,9 @@ app.use(session({
 }))
 app.use(express.urlencoded({extended:true}))  //body  使用
 app.use(methodOverride('_method'))            //method使用
+
+usePassport(app)
+
 app.use(routes)                               //路由使用，放最後
 
 
