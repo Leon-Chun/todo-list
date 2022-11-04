@@ -31,6 +31,11 @@ app.use(methodOverride('_method'))            //method使用
 
 usePassport(app)
 
+app.use((req,res,next) => {
+  res.locals.isAuthenticated = req.isAuthenticated()
+  res.locals.user = req.user //這邊req的user是在passport.js 的反序列化那邊，丟的。
+  next() //有放next參數，這個呼叫就先寫上
+})
 app.use(routes)                               //路由使用，放最後
 
 
