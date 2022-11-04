@@ -28,7 +28,7 @@ module.exports = app => {
  
   //session設定，使用序列反序列。
   passport.serializeUser((user,done) => {
-    done(null,user.id)  //這邊 ._id 也可以
+    done(null,user.id)  //這邊 ._id 也可以m
   })
   passport.deserializeUser((id,done) => {
     User.findById(id)

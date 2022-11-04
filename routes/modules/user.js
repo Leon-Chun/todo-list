@@ -36,23 +36,12 @@ router.post('/register',(req,res) => {
             .then(res.redirect('/'))
             .catch(err => console.log(err))
         }
-         
        })
-
-
-  // Users.create({
-  //         name,
-  //         email,
-  //         password
-          
-  //       })
-  //       .then(() => res.render(''))
-  //       .catch(err => console.log(err))
-
-
-
-
 })
 
+router.get('/logout',(req,res) => {  //新版本passport不能用get 
+  req.logout()
+  res.redirect('/users/login')
+})
 
 module.exports = router
