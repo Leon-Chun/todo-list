@@ -9,6 +9,12 @@ const todoSchema = new Schema({
   isDone: {
     type: Boolean,
     default:false
+  },
+  userId: {
+    type:Schema.Types.ObjectId,  //定義這包uderId{}，是個物件
+    ref: 'User',//定義參考對象是User model
+    index:true, //當資料越來越龐大，有設定 index，搜尋效率會比較快。
+    required:true
   }
 })
 

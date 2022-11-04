@@ -3,7 +3,8 @@ const router = express.Router() // 啟動路由器功能
 const Todo = require('../../models/todo') //資料庫資料
 
 router.get('/', (req, res) => {
-  Todo.find()
+  const userId = req.user._id
+  Todo.find({ userId })
     .lean()
     .sort({ name: 'asc' }) //desc 反序
     .then(todos => res.render('index', { todos }))

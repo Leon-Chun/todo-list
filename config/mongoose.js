@@ -6,7 +6,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 //database setting
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 const db = mongoose.connection    // 取得資料庫連線狀態
 db.on('error', () => {                  // 連線異常
   console.log('mongodb error')
