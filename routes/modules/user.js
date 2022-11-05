@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router() // 啟動路由器功能
 const Users = require('../../models/users')
 const passport = require('passport')
+const bcrypt = require('bcryptjs')
 
 router.get('/login',(req,res) => {
   res.render('login')
@@ -51,11 +52,16 @@ router.post('/register',(req,res) => {
       })
     }
 
-    return Users.create({
+    return bcrypt
+      .genSalt(10)  //run數
+      .then(salt => bcrypt.hash(password, salt))
+      .then(hash => Users.create({
       name,
       email,
-      password
-    })
+      password: hash
+    }))
+
+    
       .then(res.redirect('/'))
       .catch(err => console.log(err))
     })
