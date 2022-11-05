@@ -5,13 +5,15 @@ const router = express.Router()
 const home = require('./modules/home')
 const todos = require('./modules/todos')
 const users = require('./modules/user')
+const auth = require('./modules/auth')
 
 const { authenticator } = require('../middleware/auth')
 
 
 //請求 與 對應小路由。 路由必須由複雜開始往下排
 router.use('/todos', authenticator,todos)
-router.use('/users', users)  
+router.use('/users', users)
+router.use('/auth',auth)  
 router.use('/',authenticator,home) 
 
 module.exports = router

@@ -4,7 +4,12 @@ const session = require('express-session')
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override')
 const flash = require('connect-flash')
-const PORT = process.env.PORT || 3000
+
+if(process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const PORT = process.env.PORT
 
 //自己設定的引用的項目
 const routes = require('./routes')  //預設會去抓 index.js(總路由器)
@@ -23,7 +28,7 @@ app.set('view engine','handlebars')
 
 //收到的網址處理
 app.use(session({
-  secret:"ThisIsMySecret",
+  secret: process.env.SESSION_SECRET,
   resave:false,
   saveUninitialized:true
 }))
