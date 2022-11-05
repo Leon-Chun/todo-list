@@ -42,7 +42,7 @@ router.post('/register',(req,res) => {
     .then(data => {
     if(data){
       errors.push({message: '此信箱已註冊過'})
-      res.render('register',{
+      return res.render('register',{
         errors,
         name,
         email,
@@ -62,7 +62,7 @@ router.post('/register',(req,res) => {
 })
 
 router.get('/logout',(req,res) => {  //新版本passport不能用get 
-  req.logout
+  req.logout()
   req.flash('success_msg','你已經成功登出。')
   res.redirect('/users/login')
 })
