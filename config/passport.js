@@ -1,7 +1,7 @@
 const { urlencoded } = require('express')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-
+const bcrypt = require('bcryptjs')
 const User = require('../models/users')
 
 module.exports = app => {
@@ -18,10 +18,17 @@ module.exports = app => {
           return done(null,false,{message:'That email is not registered'})
           // null 是沒異常的意思，後面則是沒找到user
         }
-        if(user.password !== password){
+
+        //密碼比對
+        return bcrypt.compare(password, user.password)
+        //password是使用者輸入，user.password是從資料庫拿出來的密碼，做比較
+          .then(isMatch => {
+            if(!isMatch){
           return done(null,false,{message:'Email or Password incorrect'})
         }
+
         return done(null, user)
+          })        
       })
       .catch(err => done(err,false))  //注意跟mongoose提供寫法不同
   }))  
