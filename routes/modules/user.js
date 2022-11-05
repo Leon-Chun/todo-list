@@ -19,28 +19,51 @@ router.post('/login', passport.authenticate('local',{
 router.post('/register',(req,res) => {
   //結構賦值
   const { name,email,password,confirmPassword } = req.body
+  const errors = []
+
+  if(!name || !email || !password || !confirmPassword){
+    errors.push({message: '所有欄位都是必填'})
+  }
+  if(password !== confirmPassword){
+    errors.push({message: '密碼與確認密碼不符'})
+  }
+  
+  if(errors.length){
+    return res.render('register',{
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
 
   Users.findOne({email})
-       .then(data => {
-        if(data){
-          res.render('register',{
-            name,
-            email
-          })
-        }else{
-          Users.create({
-            name,
-            email,
-            password
-          })
-            .then(res.redirect('/'))
-            .catch(err => console.log(err))
-        }
-       })
+    .then(data => {
+    if(data){
+      errors.push({message: '此信箱已註冊過'})
+      res.render('register',{
+        errors,
+        name,
+        email,
+        password,
+        confirmPassword
+      })
+    }
+
+    return Users.create({
+      name,
+      email,
+      password
+    })
+      .then(res.redirect('/'))
+      .catch(err => console.log(err))
+    })
 })
 
 router.get('/logout',(req,res) => {  //新版本passport不能用get 
-  req.logout()
+  req.logout
+  req.flash('success_msg','你已經成功登出。')
   res.redirect('/users/login')
 })
 

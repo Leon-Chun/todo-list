@@ -4,6 +4,7 @@ module.exports = {   //做一個物件
     if (req.isAuthenticated()) {   //isAuthenticated() passport給的屬性
       return next()
     }
+    req.flash('warning_msg' , '請先登入才能使用！')
     res.redirect('/users/login')
   }
 }
